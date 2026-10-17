@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XENXD8JGQX');
+</script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスクの詳細</title>
+    <style>
+        :root {
+            --primary-color: #6577B3;
+            --primary-hover: #54649b;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 24px 24px 36px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .detail-card {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            word-break: break-all;
+        }
+
+        .detail-value.description-text {
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        /* ハッシュタグバッジ（詳細用） */
+        .tag-badge {
+            display: inline-block;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            background-color: #f0f3fb;
+            padding: 2px 8px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .action-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .back-button {
+            background-color: #f3f4f6;
+            color: var(--text-muted);
+        }
+
+        .back-button:hover {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px 0;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>タスク詳細</h1>
+        
+        <div id="detailContainer"></div>
+
+        <div class="button-group" id="buttonGroup"></div>
+    </div>
+
+    <script>
+        const detailContainer = document.getElementById('detailContainer');
+        const buttonGroup = document.getElementById('buttonGroup');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const taskId = Number(urlParams.get('id'));
+
+        const todos = JSON.parse(localStorage.getItem('todos')) || [];
+        const task = todos.find(t => t.id === taskId);
+
+        if (task) {
+            let html = `
+                <div class="detail-card">
+                    <div class="detail-item">
+                        <span class="detail-label">タスク内容</span>
+                        <span class="detail-value">${escapeHtml(task.text)}</span>
+                    </div>
+            `;
+
+            if (task.priority) {
+                html += `
+                    <div class="detail-item">
+                        <span class="detail-label">優先順位</span>
+                        <span class="detail-value">${escapeHtml(task.priority)}</span>
+                    </div>
+                `;
+            }
+
+            if (task.dueDate) {
+                html += `
+                    <div class="detail-item">
+                        <span class="detail-label">期限（日付）</span>
+                        <span class="detail-value">${escapeHtml(task.dueDate)}</span>
+                    </div>
+                `;
+            }
+
+            if (task.dueTime) {
+                html += `
+                    <div class="detail-item">
+                        <span class="detail-label">期限（時間）</span>
+                        <span class="detail-value">${escapeHtml(task.dueTime)}</span>
+                    </div>
+                `;
+            }
+
+            if (task.tag && task.tag.trim() !== '') {
+                const cleanTag = task.tag.trim().startsWith('#') ? task.tag.trim() : '#' + task.tag.trim();
+                html += `
+                    <div class="detail-item">
+                        <span class="detail-label">ハッシュタグ</span>
+                        <span class="tag-badge">${escapeHtml(cleanTag)}</span>
+                    </div>
+                `;
+            }
+
+            if (task.description) {
+                html += `
+                    <div class="detail-item">
+                        <span class="detail-label">詳細</span>
+                        <span class="detail-value description-text">${escapeHtml(task.description)}</span>
+                    </div>
+                `;
+            }
+
+            html += `
+                    <div class="detail-item">
+                        <span class="detail-label">状態</span>
+                        <span class="detail-value">${task.completed ? '完了済み' : '未完了'}</span>
+                    </div>
+                </div>
+            `;
+
+            detailContainer.innerHTML = html;
+
+            buttonGroup.innerHTML = `
+                <a href="edit.html?id=${task.id}" class="action-button">編集する</a>
+                <a href="index.html" class="action-button back-button">戻る</a>
+            `;
+        } else {
+            detailContainer.innerHTML = `<p class="empty-message">該当するタスクが見つかりませんでした。</p>`;
+            buttonGroup.innerHTML = `<a href="index.html" class="action-button back-button">戻る</a>`;
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+    </script>
+</body>
+</html>

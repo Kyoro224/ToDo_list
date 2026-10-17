@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XENXD8JGQX');
+</script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シンプル Todoリスト</title>
+
+    <style>
+        :root {
+            --primary-color: #6577B3;
+            --primary-hover: #54649b;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --danger-color: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 90vh;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            max-height: 720px;
+            background: var(--card-bg);
+            padding: 24px 24px 80px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-color);
+            flex: 1;
+        }
+
+        .bell-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .bell-btn:hover {
+            background-color: #f3f4f6;
+        }
+
+        .bell-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 5px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.875rem;
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .todo-sections {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            min-height: 0;
+        }
+
+        .todo-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .active-list-container {
+            flex: 3;
+            overflow-y: auto;
+            min-height: 0;
+        }
+
+        .divider-container {
+            padding: 4px 0;
+            display: none;
+            flex-shrink: 0;
+        }
+
+        .fixed-divider {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .completed-list-container {
+            flex: 2;
+            overflow-y: auto;
+            min-height: 0;
+            display: none;
+        }
+
+        .controls-bottom {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+
+        .select-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .toolbar-select {
+            width: 100%;
+            padding: 6px 8px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+            background-color: #fff;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .toolbar-select:focus {
+            border-color: var(--primary-color);
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            gap: 10px;
+        }
+
+        .todo-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .todo-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .todo-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .todo-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .priority-badge {
+            font-size: 0.7rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .priority-1 { background-color: #fee2e2; color: #ef4444; }
+        .priority-2 { background-color: #fef3c7; color: #d97706; }
+        .priority-3 { background-color: #e0e7ff; color: #4f46e5; }
+        .priority-4 { background-color: #f3f4f6; color: #4b5563; }
+
+        .tag-badge {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            background-color: #f0f3fb;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .detail-btn {
+            font-size: 0.8rem;
+            padding: 5px 8px;
+            background-color: #f3f4f6;
+            color: var(--text-muted);
+            border-radius: 6px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .detail-btn:hover {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+        }
+
+        .todo-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .todo-checkbox:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .todo-checkbox:checked::after {
+            content: '✔';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .todo-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .todo-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+        .delete-btn:hover {
+            color: var(--danger-color);
+            background-color: #fee2e2;
+        }
+
+        .todo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+
+        .about-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .about-link:hover {
+            text-decoration: underline;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        /* 画面左下に絶対配置するプライバシーポリシーリンク */
+        .outer-privacy-link {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+
+        .outer-privacy-link:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+
+        .fab {
+            position: absolute;
+            bottom: 20px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .fab:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .notification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .notification-content {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .close-notif-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .notification-body {
+            max-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .notif-item {
+            padding: 8px 10px;
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .container:has(.filter-btn[data-filter="completed"].active) .active-list-container,
+        .container:has(.filter-btn[data-filter="completed"].active) .divider-container {
+            display: none !important;
+        }
+        .container:has(.filter-btn[data-filter="completed"].active) .completed-list-container {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-top">
+            <h1>Todo リスト</h1>
+            <button id="bellBtn" class="bell-btn" title="通知を確認">
+                🔔
+                <span id="bellBadge" class="bell-badge">0</span>
+            </button>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">すべて</button>
+            <button class="filter-btn" data-filter="active">未完了</button>
+            <button class="filter-btn" data-filter="completed">完了済み</button>
+        </div>
+
+        <div class="todo-sections">
+            <div class="active-list-container">
+                <ul class="todo-list" id="activeList"></ul>
+            </div>
+
+            <div class="divider-container" id="dividerContainer">
+                <hr class="fixed-divider">
+            </div>
+
+            <div class="completed-list-container" id="completedSection">
+                <ul class="todo-list" id="completedList"></ul>
+            </div>
+        </div>
+
+        <div class="controls-bottom">
+            <div class="select-wrapper">
+                <select id="sortSelect" class="toolbar-select">
+                    <option value="default">並び替え: 標準</option>
+                    <option value="priority">並び替え: 優先順位順</option>
+                    <option value="deadline">並び替え: 期限順</option>
+                </select>
+            </div>
+            <div class="select-wrapper">
+                <select id="tagFilterSelect" class="toolbar-select">
+                    <option value="all">タグ: すべて</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="todo-footer">
+            <span id="taskCount">残りタスク: 0件</span>
+            <a href="about.html" class="about-link">ℹ️ 通知について</a>
+        </div>
+
+        <!-- 大枠（container）の左下に配置したプライバシーポリシーへのリンク -->
+        <a href="privacy.html" class="outer-privacy-link">🔒 プライバシーポリシー</a>
+
+        <!-- FAB (＋ボタン) -->
+        <a href="add.html" class="fab" title="タスクを追加">+</a>
+    </div>
+
+    <!-- 通知ポップアップ -->
+    <div id="notificationModal" class="notification-modal" style="display: none;">
+        <div class="notification-content">
+            <div class="notification-header">
+                <span>🔔 お知らせ・リマインダー</span>
+                <button id="closeNotifBtn" class="close-notif-btn">&times;</button>
+            </div>
+            <div id="notificationBody" class="notification-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const activeList = document.getElementById('activeList');
+        const completedList = document.getElementById('completedList');
+        const completedSection = document.getElementById('completedSection');
+        const dividerContainer = document.getElementById('dividerContainer');
+        const taskCount = document.getElementById('taskCount');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const sortSelect = document.getElementById('sortSelect');
+        const tagFilterSelect = document.getElementById('tagFilterSelect');
+        
+        const bellBtn = document.getElementById('bellBtn');
+        const bellBadge = document.getElementById('bellBadge');
+        const notificationModal = document.getElementById('notificationModal');
+        const closeNotifBtn = document.getElementById('closeNotifBtn');
+        const notificationBody = document.getElementById('notificationBody');
+
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+        let currentFilter = 'all';
+        let currentSort = 'default';
+        let currentTagFilter = 'all';
+
+        function saveTodos() {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function checkCatchupNotifications() {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+            const currentHour = now.getHours();
+            const activeTodos = todos.filter(t => !t.completed);
+            
+            let messages = [];
+
+            const last18Check = localStorage.getItem('last18CheckDate');
+            if (currentHour >= 18 && last18Check !== todayStr && activeTodos.length > 0) {
+                messages.push(`夕方のリマインダー：未完了のタスクが <strong>${activeTodos.length}件</strong> 残っています。`);
+                localStorage.setItem('last18CheckDate', todayStr);
+            }
+
+            activeTodos.forEach(todo => {
+                if (todo.dueDate) {
+                    const dueDateTimeStr = todo.dueDate + (todo.dueTime ? 'T' + todo.dueTime : 'T23:59');
+                    const dueDateTime = new Date(dueDateTimeStr);
+                    const diffMinutes = (dueDateTime - now) / (1000 * 60);
+
+                    if (diffMinutes < 0) {
+                        messages.push(`期限切れ：「<strong>${escapeHtml(todo.text)}</strong>」の期限が過ぎています。`);
+                    } else if (diffMinutes <= 60 && !todo.notifiedDeadline) {
+                        messages.push(`まもなく期限：「<strong>${escapeHtml(todo.text)}</strong>」の期限まであと1時間以内です。`);
+                        todo.notifiedDeadline = true;
+                        saveTodos();
+                    }
+                }
+            });
+
+            let savedNotifs = JSON.parse(localStorage.getItem('appNotifications')) || [];
+            messages.forEach(msg => {
+                if (!savedNotifs.includes(msg)) {
+                    savedNotifs.push(msg);
+                }
+            });
+
+            localStorage.setItem('appNotifications', JSON.stringify(savedNotifs));
+            updateBellBadge(savedNotifs.length);
+        }
+
+        function updateBellBadge(count) {
+            if (count > 0) {
+                bellBadge.textContent = count;
+                bellBadge.style.display = 'inline-block';
+            } else {
+                bellBadge.style.display = 'none';
+            }
+        }
+
+        bellBtn.addEventListener('click', () => {
+            const savedNotifs = JSON.parse(localStorage.getItem('appNotifications')) || [];
+            notificationBody.innerHTML = '';
+
+            if (savedNotifs.length === 0) {
+                notificationBody.innerHTML = '<div class="empty-message">新しいお知らせはありません</div>';
+            } else {
+                savedNotifs.forEach(msg => {
+                    const div = document.createElement('div');
+                    div.className = 'notif-item';
+                    div.innerHTML = msg;
+                    notificationBody.appendChild(div);
+                });
+            }
+            notificationModal.style.display = 'flex';
+        });
+
+        closeNotifBtn.addEventListener('click', () => {
+            notificationModal.style.display = 'none';
+            localStorage.removeItem('appNotifications');
+            updateBellBadge(0);
+        });
+
+        notificationModal.addEventListener('click', (e) => {
+            if (e.target === notificationModal) {
+                notificationModal.style.display = 'none';
+                localStorage.removeItem('appNotifications');
+                updateBellBadge(0);
+            }
+        });
+
+        function getDeadlineString(todo) {
+            if (!todo.dueDate) return '9999-12-31T23:59';
+            return todo.dueDate + (todo.dueTime ? 'T' + todo.dueTime : 'T00:00');
+        }
+
+        function updateTagOptions() {
+            const currentSelected = tagFilterSelect.value;
+            const tagsSet = new Set();
+            todos.forEach(todo => {
+                if (todo.tag && todo.tag.trim() !== '') {
+                    let clean = todo.tag.trim();
+                    if (clean.startsWith('#')) clean = clean.substring(1);
+                    if (clean) tagsSet.add(clean);
+                }
+            });
+
+            let optionsHtml = '<option value="all">タグ: すべて</option>';
+            Array.from(tagsSet).sort().forEach(tag => {
+                const displayTag = '#' + tag;
+                const selected = (currentSelected === displayTag) ? 'selected' : '';
+                optionsHtml += `<option value="${displayTag}" ${selected}>${displayTag}</option>`;
+            });
+            tagFilterSelect.innerHTML = optionsHtml;
+        }
+
+        function renderTodos() {
+            updateTagOptions();
+            activeList.innerHTML = '';
+            completedList.innerHTML = '';
+
+            let filteredTodos = todos;
+            if (currentTagFilter !== 'all') {
+                filteredTodos = todos.filter(todo => {
+                    if (!todo.tag) return false;
+                    let clean = todo.tag.trim();
+                    if (!clean.startsWith('#')) clean = '#' + clean;
+                    return clean === currentTagFilter;
+                });
+            }
+
+            let activeTodos = filteredTodos.filter(t => !t.completed);
+            const completedTodos = filteredTodos.filter(t => t.completed);
+
+            if (currentSort === 'priority') {
+                activeTodos.sort((a, b) => {
+                    const pA = a.priority ? Number(a.priority) : 5;
+                    const pB = b.priority ? Number(b.priority) : 5;
+
+                    if (pA !== pB) {
+                        return pA - pB;
+                    }
+                    return getDeadlineString(a).localeCompare(getDeadlineString(b));
+                });
+            } else if (currentSort === 'deadline') {
+                activeTodos.sort((a, b) => {
+                    return getDeadlineString(a).localeCompare(getDeadlineString(b));
+                });
+            }
+
+            let showActive = (currentFilter === 'all' || currentFilter === 'active');
+            let showCompleted = (currentFilter === 'all' || currentFilter === 'completed');
+
+            if (showActive) {
+                if (activeTodos.length === 0) {
+                    if (currentFilter === 'active' || currentTagFilter !== 'all') {
+                        activeList.innerHTML = `<li class="empty-message">該当するタスクはありません</li>`;
+                    } else if (completedTodos.length === 0) {
+                        activeList.innerHTML = `<li class="empty-message">タスクがありません</li>`;
+                    }
+                } else {
+                    activeTodos.forEach(todo => {
+                        activeList.appendChild(createTodoItem(todo));
+                    });
+                }
+            }
+
+            if (showCompleted && completedTodos.length > 0) {
+                completedSection.style.display = 'block';
+                if (currentFilter === 'all' && activeTodos.length > 0) {
+                    dividerContainer.style.display = 'block';
+                } else if (currentFilter === 'completed') {
+                    dividerContainer.style.display = 'none';
+                } else {
+                    dividerContainer.style.display = 'block';
+                }
+
+                completedTodos.forEach(todo => {
+                    completedList.appendChild(createTodoItem(todo));
+                });
+            } else {
+                if (currentFilter === 'completed' && completedTodos.length === 0) {
+                    completedList.innerHTML = `<li class="empty-message">完了済みのタスクはありません</li>`;
+                    completedSection.style.display = 'block';
+                    dividerContainer.style.display = 'none';
+                } else {
+                    completedSection.style.display = 'none';
+                    dividerContainer.style.display = 'none';
+                }
+            }
+
+            const totalActiveCount = todos.filter(t => !t.completed).length;
+            taskCount.textContent = `残りタスク: ${totalActiveCount}件`;
+        }
+
+        function createTodoItem(todo) {
+            const li = document.createElement('li');
+            li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+            
+            let priorityBadge = '';
+            if (todo.priority) {
+                priorityBadge = `<span class="priority-badge priority-${escapeHtml(todo.priority)}">${escapeHtml(todo.priority)}</span>`;
+            }
+
+            let dateHtml = '';
+            if (todo.dueDate || todo.dueTime) {
+                let dateText = todo.dueDate || '';
+                if (todo.dueTime) {
+                    dateText += (dateText ? ' ' : '') + todo.dueTime;
+                }
+                dateHtml = `<span class="todo-date">📅 ${escapeHtml(dateText)}</span>`;
+            }
+
+            let tagHtml = '';
+            if (todo.tag && todo.tag.trim() !== '') {
+                const cleanTag = todo.tag.trim().startsWith('#') ? todo.tag.trim() : '#' + todo.tag.trim();
+                tagHtml = `<span class="tag-badge">${escapeHtml(cleanTag)}</span>`;
+            }
+
+            li.innerHTML = `
+                <div class="todo-left">
+                    <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+                    <div class="todo-content">
+                        <span class="todo-text">${escapeHtml(todo.text)}</span>
+                        <div class="todo-meta">
+                            ${priorityBadge}
+                            ${dateHtml}
+                            ${tagHtml}
+                        </div>
+                    </div>
+                </div>
+                <div class="todo-right">
+                    <a href="detail.html?id=${todo.id}" class="detail-btn">詳細</a>
+                    <button class="delete-btn" data-id="${todo.id}">&times;</button>
+                </div>
+            `;
+            return li;
+        }
+
+        document.addEventListener('click', (e) => {
+            const id = Number(e.target.dataset.id);
+
+            if (e.target.classList.contains('todo-checkbox')) {
+                todos = todos.map(todo => 
+                    todo.id === id ? { ...todo, completed: e.target.checked } : todo
+                );
+                saveTodos();
+                renderTodos();
+            }
+
+            if (e.target.classList.contains('delete-btn')) {
+                todos = todos.filter(todo => todo.id !== id);
+                saveTodos();
+                renderTodos();
+            }
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTodos();
+            });
+        });
+
+        sortSelect.addEventListener('change', (e) => {
+            currentSort = e.target.value;
+            renderTodos();
+        });
+
+        tagFilterSelect.addEventListener('change', (e) => {
+            currentTagFilter = e.target.value;
+            renderTodos();
+        });
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        renderTodos();
+        checkCatchupNotifications();
+    </script>
+</body>
+</html>

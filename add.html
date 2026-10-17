@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XENXD8JGQX');
+</script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タスクの追加</title>
+    <style>
+        :root {
+            --primary-color: #6577B3;
+            --primary-hover: #54649b;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 24px 24px 36px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .todo-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .row-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .row-group .form-group {
+            flex: 1;
+        }
+
+        .todo-input {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+            background-color: #ffffff;
+            color: var(--text-color);
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* プレフィックス付きハッシュタグ入力用ラッパー */
+        .tag-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: #ffffff;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .tag-input-wrapper:focus-within {
+            border-color: var(--primary-color);
+        }
+
+        .tag-prefix {
+            padding-left: 14px;
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .tag-input-wrapper .todo-input {
+            border: none;
+            border-radius: 0;
+            padding-left: 4px;
+        }
+
+        .tag-input-wrapper .todo-input:focus {
+            border-color: transparent;
+        }
+
+        textarea.todo-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .todo-input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .datetime-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .datetime-group .form-group {
+            flex: 1;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .todo-button {
+            flex: 1;
+            padding: 12px;
+            font-size: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .todo-button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .cancel-button {
+            background-color: #f3f4f6;
+            color: var(--text-muted);
+        }
+
+        .cancel-button:hover {
+            background-color: #e5e7eb;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>タスクを追加</h1>
+        
+        <form class="todo-form" id="todoForm">
+            <div class="form-group">
+                <label class="form-label" for="todoInput">タスク内容</label>
+                <input type="text" class="todo-input" id="todoInput" placeholder="新しいタスクを入力..." autocomplete="off" required autofocus style="cursor: text; user-select: auto; -webkit-user-select: auto;">
+            </div>
+
+            <!-- 優先順位（任意）とハッシュタグを横並び -->
+            <div class="row-group">
+                <div class="form-group">
+                    <label class="form-label" for="prioritySelect">優先順位（任意）</label>
+                    <select class="todo-input" id="prioritySelect" style="cursor: pointer;">
+                        <option value="">指定なし</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="tagInput">ハッシュタグ</label>
+                    <div class="tag-input-wrapper">
+                        <span class="tag-prefix">#</span>
+                        <input type="text" class="todo-input" id="tagInput" placeholder="仕事" autocomplete="off" style="cursor: text; user-select: auto; -webkit-user-select: auto;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="datetime-group">
+                <div class="form-group">
+                    <label class="form-label" for="dueDate">期限（日付）</label>
+                    <input type="date" class="todo-input" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dueTime">期限（時間）</label>
+                    <input type="time" class="todo-input" id="dueTime">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="descriptionInput">詳細（文章メモ）</label>
+                <textarea class="todo-input" id="descriptionInput" placeholder="詳細な文章やメモを入力..." style="cursor: text; user-select: auto; -webkit-user-select: auto;"></textarea>
+            </div>
+
+            <div class="button-group">
+                <a href="index.html" class="todo-button cancel-button">キャンセル</a>
+                <button type="submit" class="todo-button">追加する</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const todoForm = document.getElementById('todoForm');
+        const todoInput = document.getElementById('todoInput');
+        const prioritySelect = document.getElementById('prioritySelect');
+        const dueDateInput = document.getElementById('dueDate');
+        const dueTimeInput = document.getElementById('dueTime');
+        const tagInput = document.getElementById('tagInput');
+        const descriptionInput = document.getElementById('descriptionInput');
+
+        dueDateInput.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            if (typeof dueDateInput.showPicker === 'function') {
+                dueDateInput.showPicker();
+            }
+        });
+
+        dueTimeInput.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            if (typeof dueTimeInput.showPicker === 'function') {
+                dueTimeInput.showPicker();
+            }
+        });
+
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = todoInput.value.trim();
+            if (!text) return;
+
+            let todos = JSON.parse(localStorage.getItem('todos')) || [];
+
+            const newTodo = {
+                id: Date.now(),
+                text: text,
+                priority: prioritySelect.value || '',
+                dueDate: dueDateInput.value || '',
+                dueTime: dueTimeInput.value || '',
+                tag: tagInput.value.trim() || '',
+                description: descriptionInput.value.trim() || '',
+                completed: false
+            };
+
+            todos.push(newTodo);
+            localStorage.setItem('todos', JSON.stringify(todos));
+
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
