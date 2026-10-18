@@ -71,23 +71,45 @@
         }
 
         h1 {
-            font-size: 1.5rem;
-            text-align: center;
+            font-size: 1.4rem;
+            text-align: left;
             color: var(--text-color);
-            flex: 1;
+        }
+
+        /* ヘッダー右上のリンクグループ */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-link-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 8px;
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .header-link-btn:hover {
+            background-color: #f3f4f6;
         }
 
         .bell-btn {
             background: none;
             border: 1px solid var(--border-color);
             border-radius: 50%;
-            width: 38px;
-            height: 38px;
+            width: 34px;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             position: relative;
             transition: background-color 0.2s;
         }
@@ -371,7 +393,7 @@
             font-size: 0.9rem;
         }
 
-        /* 画面左下に絶対配置するプライバシーポリシーリンク */
+        /* 画面左下に配置するプライバシーポリシーリンク */
         .outer-privacy-link {
             position: absolute;
             bottom: 24px;
@@ -484,10 +506,13 @@
     <div class="container">
         <div class="header-top">
             <h1>Todo リスト</h1>
-            <button id="bellBtn" class="bell-btn" title="通知を確認">
-                🔔
-                <span id="bellBadge" class="bell-badge">0</span>
-            </button>
+            <div class="header-actions">
+                <a href="https://kyoro224.github.io/developer/" class="header-link-btn">👤 プロフィール</a>
+                <button id="bellBtn" class="bell-btn" title="通知を確認">
+                    🔔
+                    <span id="bellBadge" class="bell-badge">0</span>
+                </button>
+            </div>
         </div>
 
         <div class="filters">
