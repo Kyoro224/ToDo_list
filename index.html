@@ -432,7 +432,6 @@
             background-color: var(--primary-hover);
         }
 
-        /* モーダル共通スタイル（通知・初回ウェルカム共通） */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -511,6 +510,29 @@
             color: #92400e;
             margin-top: 4px;
             line-height: 1.5;
+        }
+
+        .welcome-privacy-box {
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .welcome-privacy-link {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .welcome-privacy-link:hover {
+            text-decoration: underline;
         }
 
         .modal-action-btn {
@@ -614,6 +636,7 @@
 
         <div class="todo-footer">
             <span id="taskCount">残りタスク: 0件</span>
+            <!-- 通常通り about.html に遷移するリンク -->
             <a href="about.html" class="about-link">ℹ️ アプリについて</a>
         </div>
 
@@ -622,7 +645,7 @@
         <a href="add.html" class="fab" title="タスクを追加">+</a>
     </div>
 
-    <!-- 初回起動時ウェルカム案内モーダル -->
+    <!-- 初回起動時 / #openWelcome 時のウェルカム案内モーダル -->
     <div id="welcomeModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -634,12 +657,21 @@
                     <div class="welcome-title">🔔 ベルマーク通知機能について</div>
                     <div>
                         当アプリでは、タスク管理をサポートするためにお出迎え式の通知機能を提供しています。<br><br>
-                        ・画面右上の<b>ベルマーク（🔔）</b>に赤いバッジがついている場合、新しいお知らせやリマインダーが届きます。<br>
+                        ・画面右上の<b>ベルマーク（🔔）</b>に赤いバッジがついている場合、新しいお知らせやリマインダーが届いています。<br>
                         ・ボタンを押すことで、夕方の未完了タスク確認や、期限間近のタスク内容をいつでも確認できます。
                         
                         <div class="notice-box">
                             ⚠️ <b>ご注意：</b>ブラウザの仕様上、アプリやタブが<b>バックグラウンド（裏で起動している状態）にあるときには通知が動作しません</b>。ツールを開いている（アクティブな）状態でご利用ください。
                         </div>
+                    </div>
+                </div>
+
+                <!-- プライバシーポリシー案内枠 -->
+                <div class="welcome-privacy-box">
+                    <div class="welcome-title">🔒 個人情報の取扱いについて</div>
+                    <div style="font-size: 0.85rem; color: var(--text-color);">
+                        当アプリにおけるデータ収集やプライバシーの保護については、以下のページをご確認ください。<br>
+                        <a href="privacy_1.html" class="welcome-privacy-link">👉 プライバシーポリシーを見る</a>
                     </div>
                 </div>
             </div>
@@ -691,20 +723,21 @@
             localStorage.setItem('todos', JSON.stringify(todos));
         }
 
-        // 初回起動チェック ＆ #openNotification ハッシュ検知処理
+        // 初回訪問時、または privacy_1 から #openWelcome ハッシュ付きで戻ってきた場合の処理
         window.addEventListener('DOMContentLoaded', () => {
             const hasVisitedTodo = localStorage.getItem('todoHasVisited');
-            if (!hasVisitedTodo) {
-                // 初回アクセス時のみウェルカムモーダルを表示
+            
+            if (!hasVisitedTodo || window.location.hash === '#openWelcome') {
                 welcomeModal.style.display = 'flex';
+                if (window.location.hash === '#openWelcome') {
+                    history.replaceState(null, null, window.location.pathname);
+                }
             } else if (window.location.hash === '#openNotification') {
-                // ハッシュ指定がある場合は通知モーダルを開く
                 bellBtn.click();
                 history.replaceState(null, null, window.location.pathname);
             }
         });
 
-        // ウェルカムモーダルを閉じる処理
         function closeWelcomeModal() {
             localStorage.setItem('todoHasVisited', 'true');
             welcomeModal.style.display = 'none';
