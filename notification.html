@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    
+    <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XENXD8JGQX');
+</script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通知に関するお知らせ</title>
+
+    <style>
+        :root {
+            --primary-color: #6577B3;
+            --primary-hover: #54649b;
+            --bg-color: #f9fafb;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            padding: 24px 24px 36px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-align: center;
+            color: var(--text-color);
+        }
+
+        .section-card {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .notice-box {
+            background-color: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.85rem;
+            color: #92400e;
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .privacy-link {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+
+        .action-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .action-button:hover {
+            background-color: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>通知について</h1>
+        
+        <div class="section-card">
+            <div class="section-title">🔔 ベルマーク通知機能について</div>
+            <div class="section-desc">
+                当アプリでは、タスク管理をサポートするためにお出迎え式の通知機能を提供しています。<br><br>
+                ・画面右上の<b>ベルマーク（🔔）</b>に赤いバッジがついている場合、新しいお知らせやリマインダーが届いています。<br>
+                ・ボタンを押すことで、夕方の未完了タスク確認や、期限間近のタスク内容をいつでも確認できます。
+                
+                <div class="notice-box">
+                    ⚠️ <b>ご注意：</b>ブラウザの仕様上、アプリやタブが<b>バックグラウンド（裏で起動している状態）にあるときには通知が動作しません</b>。ツールを開いている（アクティブな）状態でご利用ください。
+                </div>
+            </div>
+        </div>
+
+        <!-- 戻るリンクに #openNotification を付加してインデックスの通知欄が開くように指定 -->
+        <a href="index.html#openNotification" class="action-button">戻る</a>
+    </div>
+
+</body>
+</html>

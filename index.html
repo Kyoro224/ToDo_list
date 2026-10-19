@@ -393,7 +393,6 @@
             font-size: 0.9rem;
         }
 
-        /* 画面左下に配置するプライバシーポリシーリンク */
         .outer-privacy-link {
             position: absolute;
             bottom: 24px;
@@ -492,6 +491,21 @@
             border-radius: 8px;
         }
 
+        .notification-footer-link {
+            text-align: right;
+            font-size: 0.8rem;
+            margin-top: -4px;
+        }
+
+        .notification-footer-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .notification-footer-link a:hover {
+            text-decoration: underline;
+        }
+
         .container:has(.filter-btn[data-filter="completed"].active) .active-list-container,
         .container:has(.filter-btn[data-filter="completed"].active) .divider-container {
             display: none !important;
@@ -552,13 +566,11 @@
 
         <div class="todo-footer">
             <span id="taskCount">残りタスク: 0件</span>
-            <a href="about.html" class="about-link">ℹ️ 通知について</a>
+            <a href="about.html" class="about-link">ℹ️ アプリについて</a>
         </div>
 
-        <!-- 大枠（container）の左下に配置したプライバシーポリシーへのリンク -->
         <a href="privacy.html" class="outer-privacy-link">🔒 プライバシーポリシー</a>
 
-        <!-- FAB (＋ボタン) -->
         <a href="add.html" class="fab" title="タスクを追加">+</a>
     </div>
 
@@ -570,6 +582,9 @@
                 <button id="closeNotifBtn" class="close-notif-btn">&times;</button>
             </div>
             <div id="notificationBody" class="notification-body"></div>
+            <div class="notification-footer-link">
+                <a href="notification.html"> 通知について ＞</a>
+            </div>
         </div>
     </div>
 
@@ -597,6 +612,24 @@
         function saveTodos() {
             localStorage.setItem('todos', JSON.stringify(todos));
         }
+
+        // 初回起動時のチェック ＆ ハッシュ検知処理
+        window.addEventListener('DOMContentLoaded', () => {
+            // 初回起動時判定（localStorageに訪問フラグがなければabout.htmlに飛ばす）
+            const hasVisitedTodo = localStorage.getItem('todoHasVisited');
+            if (!hasVisitedTodo) {
+                localStorage.setItem('todoHasVisited', 'true');
+                window.location.href = 'about.html';
+                return;
+            }
+
+            // URLに #openNotification が含まれていたら自動で通知モーダルを開く
+            if (window.location.hash === '#openNotification') {
+                bellBtn.click(); // ベルボタンを押したときと同じ処理を実行
+                // URLのハッシュを綺麗にする場合
+                history.replaceState(null, null, window.location.pathname);
+            }
+        });
 
         function checkCatchupNotifications() {
             const now = new Date();
