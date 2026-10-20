@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XENXD8JGQX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-XENXD8JGQX');
-</script>
+      gtag('config', 'G-XENXD8JGQX');
+    </script>
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ▼ PNGアイコン（ファビコン）の設定 ▼ -->
+    <link rel="icon" href="icon.png" type="image/png">
+    
+    <!-- ▼ Web検索時のタイトルと説明文の設定 ▼ -->
     <title>シンプル Todoリスト</title>
+    <meta name="description" content="日々のタスクをすっきり管理・整理できるシンプルTodoリスト。優先順位付けやタグ分類に対応したWebアプリケーションです。">
+    
+    <!-- ▼ SNSシェア時のプレビュー表示（OGP）設定 ▼ -->
+    <meta property="og:title" content="シンプル Todoリスト">
+    <meta property="og:description" content="日々のタスクをすっきり管理できる、シンプルなTodoリストアプリ。">
+    <meta property="og:type" content="website">
 
     <style>
         :root {
@@ -591,7 +601,7 @@
         <div class="header-top">
             <h1>Todo リスト</h1>
             <div class="header-actions">
-                <a href="https://kyoro224.github.io/developer/" class="header-link-btn">👤 開発者について</a>
+                <a href="https://kyoro224.github.io/developer/" class="header-link-btn">🔗 開発者について</a>
                 <button id="bellBtn" class="bell-btn" title="通知を確認">
                     🔔
                     <span id="bellBadge" class="bell-badge">0</span>
@@ -636,7 +646,6 @@
 
         <div class="todo-footer">
             <span id="taskCount">残りタスク: 0件</span>
-            <!-- 通常通り about.html に遷移するリンク -->
             <a href="about.html" class="about-link">ℹ️ アプリについて</a>
         </div>
 
@@ -666,7 +675,6 @@
                     </div>
                 </div>
 
-                <!-- プライバシーポリシー案内枠 -->
                 <div class="welcome-privacy-box">
                     <div class="welcome-title">🔒 個人情報の取扱いについて</div>
                     <div style="font-size: 0.85rem; color: var(--text-color);">
@@ -723,7 +731,6 @@
             localStorage.setItem('todos', JSON.stringify(todos));
         }
 
-        // 初回訪問時、または privacy_1 から #openWelcome ハッシュ付きで戻ってきた場合の処理
         window.addEventListener('DOMContentLoaded', () => {
             const hasVisitedTodo = localStorage.getItem('todoHasVisited');
             
